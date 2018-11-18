@@ -1,37 +1,46 @@
 package com.demo.camera;
 
-public class PhotoCamera {
+public class PhotoCamera implements WriteListener {
 
-    private int size;
+    private boolean status;
+    private ImageSensor imageSensor;
+    private Card card;
+    byte[] data = new byte[1];
 
-    private double quality;
-
-    public PhotoCamera setQuality(double quality) {
-        this.quality = quality;
-        return this;
+    public PhotoCamera(ImageSensor imageSensor) {
+        this.imageSensor = imageSensor;
     }
 
-    public PhotoCamera setSize(int size) {
-        this.size = size;
-        return this;
-    }
-
-    public static PhotoCamera main(String[] args) {
-            return new PhotoCamera()
-                .setQuality(2.0)
-                .setSize(4);
+    public PhotoCamera(ImageSensor imageSensor,Card card) {
+        this.imageSensor = imageSensor;
+        this.card = card;
     }
 
     public void turnOn() {
-        // not implemented
+
+        imageSensor.turnOn();
+        status = true;
     }
 
     public void turnOff() {
-        // not implemented
+        imageSensor.turnOff();
+        status = false;
     }
 
     public void pressButton() {
-        // not implemented
+        if (status) {
+            imageSensor.read();
+            card.write(data);
+        } else {
+            return;
+        }
     }
+
+
+    @Override
+    public void writeCompleted() {
+
+    }
+
 }
 
